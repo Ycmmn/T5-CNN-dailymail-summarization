@@ -24,3 +24,8 @@ OUTPUT_DIR = "./t5_cnn_dailymail_finetuned"
 SEED = 42
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
+
+
+# ======  Load tokenizer and model ======
+tokenizer = T5TokenizerFast.from_pretrained(MODEL_NAME)
+model = T5ForConditionalGeneration.from_pretrained(MODEL_NAME).to(DEVICE)
