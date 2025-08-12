@@ -67,3 +67,11 @@ def preprocess_function(examples):
         "labels": [...]
     }
 
+print("Tokenizing dataset...")
+
+tokenized_dataset = dataset.map(
+    preprocess_function,
+    batched=True,  # Process multiple samples at once for faster mapping
+    remove_columns=dataset["train"].column_names  # Remove original columns (article, highlights)
+)
+
