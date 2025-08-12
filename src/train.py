@@ -75,3 +75,6 @@ tokenized_dataset = dataset.map(
     remove_columns=dataset["train"].column_names  # Remove original columns (article, highlights)
 )
 
+
+# Create a data collator that will dynamically pad the inputs and labels for Seq2Seq models
+data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
