@@ -29,3 +29,36 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 # ======  Load tokenizer and model ======
 tokenizer = T5TokenizerFast.from_pretrained(MODEL_NAME)
 model = T5ForConditionalGeneration.from_pretrained(MODEL_NAME).to(DEVICE)
+
+
+# ======= Load dataset =========
+dataset = load_dataset(DATASET_NAME, DATASET_CONFIG)
+
+
+prefix = "summarize: "
+
+def preprocess_function(examples):
+    # Add task prefix
+    inputs = [prefix + doc for doc in examples["article"]]
+    model_inputs = tokenizer(
+        inputs, max_length=MAX_INPUT_LENGTH, truncation=True, padding="max_length"
+    )
+
+    # Tokenize targets (labels)
+    with tokenizer.as_target_tokenizer():
+        labels = tokenizer(
+            examples["highlights"],
+            max_length=MAX_TARGET_LENGTH,
+            truncation=True,
+            padding="max_length"
+        )
+
+    # Replace pad tokens in labels with -100 to ignore in loss
+    model_inputs["labels"]=labels["input_ids"]
+    model_inputs["labels"] = [
+        [(label if label != tokenizer.pad_token_id else -100) for label in label_seq]
+        for label_seq in model_inputs["labels"]
+    ]
+
+    return model_inputs
+
