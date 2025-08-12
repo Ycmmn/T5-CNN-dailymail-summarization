@@ -61,4 +61,9 @@ def preprocess_function(examples):
     ]
 
     return model_inputs
+    return {
+        "input_ids": [...],
+        "attention_mask" : [...],
+        "labels": [...]
+    }
 
