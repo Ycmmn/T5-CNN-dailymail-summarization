@@ -117,6 +117,9 @@ decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
 # Compute ROUGE scores between predictions and references, using stemming for better matching
 result = rouge.compute(predictions=decoded_preds, references=decoded_labels, use_stemmer=True)
 
+# Get the F1 score for each ROUGE metric 
+result = {key: value.mid.fmeasure * 100 for key, value in result.items()}
+
 
 
 
