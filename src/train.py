@@ -84,12 +84,12 @@ data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
 rouge = evaluate.load("rouge")
 
 
-def postprocess_text(preds, labels):
+def postprocess_text(preds_text, labels_text):
     # Remove espace from each prediction
-    preds = [pred.strip() for pred in preds]
+    preds_text = [pred.strip() for pred in preds_text]
     # Remove espace from each label
-    labels = [label.strip() for label in labels]
-    return preds, labels
+    labels_text = [label.strip() for label in labels_text]
+    return preds_text, labels_text
 
 
 
@@ -101,3 +101,6 @@ def compute_metrics(eval_pred):
     if isinstance(preds, tuple):
         preds = preds[0]
      
+
+# Decode token IDs back into text, skipping special tokens like <pad> 
+decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
