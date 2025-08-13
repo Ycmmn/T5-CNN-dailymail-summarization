@@ -85,8 +85,19 @@ rouge = evaluate.load("rouge")
 
 
 def postprocess_text(preds, labels):
-    # Remove leading/trailing whitespace from each prediction
+    # Remove espace from each prediction
     preds = [pred.strip() for pred in preds]
-    # Remove leading/trailing whitespace from each label
+    # Remove espace from each label
     labels = [label.strip() for label in labels]
     return preds, labels
+
+
+
+
+def compute_metrics(eval_pred):
+    # eval_pred: output from the Trainer as a tuple (predictions, labels)
+    # Unpack eval_pred into predictions and labels
+    preds, labels = eval_pred
+    if isinstance(preds, tuple):
+        preds = preds[0]
+     
