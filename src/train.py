@@ -78,3 +78,15 @@ tokenized_dataset = dataset.map(
 
 # Create a data collator that will dynamically pad the inputs and labels for Seq2Seq models
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
+
+
+# Load the ROUGE metric for summarization evaluation
+rouge = evaluate.load("rouge")
+
+
+def postprocess_text(preds, labels):
+    # Remove leading/trailing whitespace from each prediction
+    preds = [pred.strip() for pred in preds]
+    # Remove leading/trailing whitespace from each label
+    labels = [label.strip() for label in labels]
+    return preds, labels
