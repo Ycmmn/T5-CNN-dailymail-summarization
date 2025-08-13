@@ -111,6 +111,9 @@ labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
 # Decode label token IDs back into text, skipping special tokens
 decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
+# Clean up whitespace in predictions and labels
+decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
+
 
 
 
