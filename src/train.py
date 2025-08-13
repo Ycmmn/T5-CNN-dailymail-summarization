@@ -71,17 +71,18 @@ print("Tokenizing dataset...")
 
 tokenized_dataset = dataset.map(
     preprocess_function,
-    batched=True,  # Process multiple samples at once for faster mapping
+    batched=True,  # Process batches instead of single samples
     remove_columns=dataset["train"].column_names  # Remove original columns (article, highlights)
 )
 
 
-# Create a data collator that will dynamically pad the inputs and labels for Seq2Seq models
+# Create a data collator that pads inputs and labels for Seq2Seq models
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
 
 
 # Load the ROUGE metric for summarization evaluation
 rouge = evaluate.load("rouge")
+
 
 
 def postprocess_text(preds_text, labels_text):
@@ -106,6 +107,7 @@ def compute_metrics(eval_pred):
 decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
 
 # Replace -100 with the pad token ID
+# np.where(condition, x, y)
 labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
 
 # Decode label token IDs back into text, skipping special tokens
