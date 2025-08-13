@@ -125,5 +125,9 @@ result["rouge_mean"] = np.mean(
     [result.get("rouge1", 0), result.get("rouge2", 0), result.get("rougeL", 0)]
 )
 
+# This is a Dictionary Comprehension
+# Round all metric values to 4 decimal places
+result = {k: round(v, 4) for k, v in result.items()}
+
 
 
