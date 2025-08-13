@@ -104,3 +104,13 @@ def compute_metrics(eval_pred):
 
 # Decode token IDs back into text, skipping special tokens like <pad> 
 decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+
+# Replace -100 with the pad token ID
+labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+
+# Decode label token IDs back into text, skipping special tokens
+decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
+
+
+
