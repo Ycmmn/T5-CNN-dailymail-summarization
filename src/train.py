@@ -120,6 +120,10 @@ result = rouge.compute(predictions=decoded_preds, references=decoded_labels, use
 # Get the F1 score for each ROUGE metric 
 result = {key: value.mid.fmeasure * 100 for key, value in result.items()}
 
+# Calculate the average of ROUGE-1, ROUGE-2, and ROUGE-L scores
+result["rouge_mean"] = np.mean(
+    [result.get("rouge1", 0), result.get("rouge2", 0), result.get("rougeL", 0)]
+)
 
 
 
