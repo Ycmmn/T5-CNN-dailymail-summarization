@@ -129,5 +129,5 @@ result["rouge_mean"] = np.mean(
 # Round all metric values to 4 decimal places
 result = {k: round(v, 4) for k, v in result.items()}
 
-
+return result
 
