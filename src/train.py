@@ -114,6 +114,9 @@ decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 # Clean up whitespace in predictions and labels
 decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
 
+# Compute ROUGE scores between predictions and references, using stemming for better matching
+result = rouge.compute(predictions=decoded_preds, references=decoded_labels, use_stemmer=True)
+
 
 
 
