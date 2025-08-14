@@ -1,5 +1,4 @@
 
-```markdown
 # 📝 T5 CNN/DailyMail Summarization
 
 > Fine-tuning the **T5-small** model on the CNN/DailyMail dataset for **text summarization** using Hugging Face Transformers.  
@@ -30,7 +29,7 @@ t5-cnn-dailymail-summarization/
 ├── inference.py   # Generates summaries / inference
 └── config.py      # Stores training\_args and fixed parameters
 
-````
+```
 
 ---
 
