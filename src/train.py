@@ -145,3 +145,16 @@ trainer = Seq2SeqTrainer(
     data_collator=data_collator,          # Pads batches
     compute_metrics=compute_metrics,      # Eval metrics
 )
+
+# --------------------- Training Model ---------------------
+trainer.train()
+
+# ----------------------- Validation ----------------
+vali_metrics = trainer.evaluate(tokenized_dataset["validation"])
+print("Validation metrics:", vali_metrics)
+
+# ------------------------ Test ---------------------
+# after training model
+test_metrics = trainer.evaluate(tokenized_dataset["test"])
+print("Test metrics:", test_metrics)
+
