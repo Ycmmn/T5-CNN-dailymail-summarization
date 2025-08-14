@@ -40,29 +40,32 @@ dataset = load_dataset(DATASET_NAME, DATASET_CONFIG)
 prefix = "summarize: "
 
 def preprocess_function(examples):
-    # Add task prefix
-    inputs = [prefix + doc for doc in examples["article"]]
-    model_inputs = tokenizer(
-        inputs, max_length=MAX_INPUT_LENGTH, truncation=True, padding="max_length"
+    # Tokenize articles
+    input_text = [prefix + doc for doc in examples["article"]]
+
+    inputs = tokenizer(
+        input_text, 
+        truncation=True, 
+        padding="max_length", 
+        max_length=MAX_INPUT_LENGTH
+    )
+    
+    # Tokenize summaries
+    labels = tokenizer(
+        examples["highlights"], 
+        truncation=True, 
+        padding="max_length", 
+        max_length=MAX_TARGET_LENGTH
     )
 
-    # Tokenize targets (labels)
-    with tokenizer.as_target_tokenizer():
-        labels = tokenizer(
-            examples["highlights"],
-            max_length=MAX_TARGET_LENGTH,
-            truncation=True,
-            padding="max_length"
-        )
 
-    # Replace pad tokens in labels with -100 to ignore in loss
-    model_inputs["labels"]=labels["input_ids"]
-    model_inputs["labels"] = [
+    # Replace pad tokens with -100 for labels
+    labels = [
         [(label if label != tokenizer.pad_token_id else -100) for label in label_seq]
-        for label_seq in model_inputs["labels"]
+        for label_seq in labels["input_ids"]
     ]
 
-    return model_inputs
+    
     return {
         "input_ids": inputs["input_ids"],
         "attention_mask" : inputs["attention_mask"],
@@ -98,44 +101,36 @@ def postprocess_text(preds_text, labels_text):
 
 
 def compute_metrics(eval_pred):
-    # eval_pred: output from the Trainer as a tuple (predictions, labels)
-    # Unpack eval_pred into predictions and labels
     preds, labels = eval_pred
     if isinstance(preds, tuple):
         preds = preds[0]
-     
 
-# Decode token IDs back into text, skipping special tokens like <pad> 
-decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+    # Decode token IDs back into text, skipping special tokens like <pad> 
+    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
 
-# Replace -100 with the pad token ID
-# np.where(condition, x, y)
-labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+    # Replace -100 with pad token ID in labels
+    labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
-# Decode label token IDs back into text, skipping special tokens
-decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+    # Clean up whitespace
+    decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
 
-# Clean up whitespace in predictions and labels
-decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
+    # Compute ROUGE scores
+    result = rouge.compute(predictions=decoded_preds, references=decoded_labels, use_stemmer=True)
 
-# Compute ROUGE scores between predictions and references, using stemming for better matching
-result = rouge.compute(predictions=decoded_preds, references=decoded_labels, use_stemmer=True)
+    # Convert to F1 scores * 100
+    result = {key: value.mid.fmeasure * 100 for key, value in result.items()}
 
-# Get the F1 score for each ROUGE metric 
-result = {key: value.mid.fmeasure * 100 for key, value in result.items()}
+    # Average of rouge1, rouge2, rougeL
+    result["rouge_mean"] = np.mean([result.get("rouge1", 0), result.get("rouge2", 0), result.get("rougeL", 0)])
 
-# Calculate the average of ROUGE-1, ROUGE-2, and ROUGE-L scores
-result["rouge_mean"] = np.mean(
-    [result.get("rouge1", 0), result.get("rouge2", 0), result.get("rougeL", 0)]
-)
+    # Round all values
+    result = {k: round(v, 4) for k, v in result.items()}
 
-# This is a Dictionary Comprehension
-# Round all metric values to 4 decimal places
-result = {k: round(v, 4) for k, v in result.items()}
-
-return result
+    return result
 
 
+# Note: This part of the project is in a separate folder.
 '''
 # Set training arguments for Seq2Seq model
 # Training settings
