@@ -133,3 +133,15 @@ result = {k: round(v, 4) for k, v in result.items()}
 
 return result
 
+
+
+# ---------- Trainer ----------
+trainer = Seq2SeqTrainer(
+    model=model,                         # Model
+    args=training_args,                   # Training settings
+    train_dataset=tokenized_dataset["train"],      # Training data
+    eval_dataset=tokenized_dataset["validation"],  # Validation data
+    tokenizer=tokenizer,                  # Tokenizer
+    data_collator=data_collator,          # Pads batches
+    compute_metrics=compute_metrics,      # Eval metrics
+)
