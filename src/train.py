@@ -64,9 +64,9 @@ def preprocess_function(examples):
 
     return model_inputs
     return {
-        "input_ids": [...],
-        "attention_mask" : [...],
-        "labels": [...]
+        "input_ids": inputs["input_ids"],
+        "attention_mask" : inputs["attention_mask"],
+        "labels" : labels
     }
 
 print("Tokenizing dataset...")
