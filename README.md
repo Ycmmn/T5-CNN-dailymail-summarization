@@ -103,7 +103,8 @@ print(summary)
 
 Here is an example of T5 generating a concise summary from a news article:
 
-![Example of T5 generating a concise summary from a news article]([src/demo.png](https://github.com/Ycmmn/t5-cnn-dailymail-summarization/blob/main/demo.jpg))
+![Example of T5 generating a concise summary from a news article](https://raw.githubusercontent.com/Ycmmn/t5-cnn-dailymail-summarization/main/demo.jpg)
+
 
 ---
 
