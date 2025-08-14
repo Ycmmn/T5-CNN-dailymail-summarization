@@ -26,3 +26,17 @@ def generate_summary(text: str, max_length: int = 128, num_beams: int = 4):
     )
     
     return summary
+
+
+
+
+# ---------------------- Sample usage --------------------
+
+# Get the first article from the test dataset
+article = dataset["test"][0]["article"]
+
+print("---- ARTICLE ----")
+print(article)
+
+print("\n---- GENERATED SUMMARY ----")
+print(generate_summary(article))
