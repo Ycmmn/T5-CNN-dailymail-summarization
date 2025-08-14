@@ -1,0 +1,45 @@
+# --- Python cache & compiled files ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.pickle
+
+# --- Virtual environment folders ---
+venv/
+env/
+.venv/
+ENV/
+
+# --- Jupyter Notebook checkpoints ---
+.ipynb_checkpoints
+
+# --- Hugging Face cache ---
+cache/
+datasets/
+huggingface/
+~/.cache/huggingface/
+~/.huggingface/
+
+# --- Model outputs ---
+OUTPUT_DIR/
+*.bin
+*.pt
+*.h5
+*.ckpt
+*.onnx
+
+# --- Logs & temp files ---
+*.log
+*.tmp
+*.temp
+
+# --- OS-specific files ---
+.DS_Store
+Thumbs.db
+
+# --- IDE/editor specific ---
+.vscode/
+.idea/
+*.swp
