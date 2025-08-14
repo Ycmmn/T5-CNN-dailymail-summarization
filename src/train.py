@@ -28,6 +28,8 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 # ======  Load tokenizer and model ======
 tokenizer = T5TokenizerFast.from_pretrained(MODEL_NAME)
+
+#  T5ForConditionalGeneration : This class is built on top of PyTorch 
 model = T5ForConditionalGeneration.from_pretrained(MODEL_NAME).to(DEVICE)
 
 
